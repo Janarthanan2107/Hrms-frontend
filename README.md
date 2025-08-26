@@ -1,1 +1,1 @@
-Project has been successfully initialized!
+Packages has been successfully initalizer!
