@@ -1,1 +1,1 @@
-layout and dasshboard setup has been completed
+Netlify errors has been fixed
