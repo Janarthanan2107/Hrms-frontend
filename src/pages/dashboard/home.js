@@ -9,119 +9,123 @@ import {
     CheckCircle,
     LogOut,
 } from "lucide-react";
+import { Button } from "../../Components/ui/button";
 
 function AttendanceCard() {
-  const [attendance, setAttendance] = useState({
-    isPresent: false,
-    clockIn: null,
-    clockOut: null,
-    totalHours: "0h 0m 0s",
-  });
-
-  const [elapsed, setElapsed] = useState("0h 0m 0s");
-
-  // Helper: format time difference to hh:mm:ss
-  const formatDiff = (ms) => {
-    const hours = Math.floor(ms / (1000 * 60 * 60));
-    const mins = Math.floor((ms / (1000 * 60)) % 60);
-    const secs = Math.floor((ms / 1000) % 60);
-    return `${hours}h ${mins}m ${secs}s`;
-  };
-
-  // Helper: format clock-in/out time to 12hr format
-  const formatTime = (dateString) => {
-    if (!dateString) return "--";
-    return new Date(dateString).toLocaleTimeString("en-US", {
-      hour: "2-digit",
-      minute: "2-digit",
-    //   second: "2-digit",
-      hour12: true,
+    const [attendance, setAttendance] = useState({
+        isPresent: false,
+        clockIn: null,
+        clockOut: null,
+        totalHours: "0h 0m 0s",
     });
-  };
 
-  // Live timer
-  useEffect(() => {
-    let interval;
-    if (attendance.isPresent && attendance.clockIn) {
-      interval = setInterval(() => {
-        const diff = Date.now() - new Date(attendance.clockIn).getTime();
-        setElapsed(formatDiff(diff));
-      }, 1000);
-    } else {
-      setElapsed(attendance.totalHours);
-    }
-    return () => clearInterval(interval);
-  }, [attendance.isPresent, attendance.clockIn, attendance.totalHours]);
+    const [elapsed, setElapsed] = useState("0h 0m 0s");
 
-  // Clock In
-  const handleClockIn = () => {
-    const now = new Date();
-    setAttendance({
-      ...attendance,
-      isPresent: true,
-      clockIn: now.toISOString(),
-      clockOut: null,
-    });
-  };
+    // Helper: format time difference to hh:mm:ss
+    const formatDiff = (ms) => {
+        const hours = Math.floor(ms / (1000 * 60 * 60));
+        const mins = Math.floor((ms / (1000 * 60)) % 60);
+        const secs = Math.floor((ms / 1000) % 60);
+        return `${hours}h ${mins}m ${secs}s`;
+    };
 
-  // Clock Out
-  const handleClockOut = () => {
-    const now = new Date();
-    const diff = now - new Date(attendance.clockIn).getTime();
+    // Helper: format clock-in/out time to 12hr format
+    const formatTime = (dateString) => {
+        if (!dateString) return "--";
+        return new Date(dateString).toLocaleTimeString("en-US", {
+            hour: "2-digit",
+            minute: "2-digit",
+            //   second: "2-digit",
+            hour12: true,
+        });
+    };
 
-    setAttendance({
-      isPresent: false,
-      clockIn: attendance.clockIn,
-      clockOut: now.toISOString(),
-      totalHours: formatDiff(diff),
-    });
-  };
+    // Live timer
+    useEffect(() => {
+        let interval;
+        if (attendance.isPresent && attendance.clockIn) {
+            interval = setInterval(() => {
+                const diff = Date.now() - new Date(attendance.clockIn).getTime();
+                setElapsed(formatDiff(diff));
+            }, 1000);
+        } else {
+            setElapsed(attendance.totalHours);
+        }
+        return () => clearInterval(interval);
+    }, [attendance.isPresent, attendance.clockIn, attendance.totalHours]);
 
-  return (
-    <div className="bg-white dark:bg-gray-800 p-5 rounded-2xl shadow-md border hover:shadow-lg transition">
-      {/* Title */}
-      <h2 className="text-xs font-semibold mb-2 uppercase text-gray-700 dark:text-gray-200 flex justify-between items-center">
-        <span className="flex items-center gap-2">
-          <Clock className="w-4 h-4 text-blue-600" />
-          Attendance
-        </span>
-        <a href="#" className="text-blue-600 hover:underline text-xs">
-          View
-        </a>
-      </h2>
+    // Clock In
+    const handleClockIn = () => {
+        const now = new Date();
+        setAttendance({
+            ...attendance,
+            isPresent: true,
+            clockIn: now.toISOString(),
+            clockOut: null,
+        });
+    };
 
-      {/* Hours */}
-      <p className="text-sm text-gray-500">Total Hours</p>
-      <h3 className="text-md font-semibold text-gray-800 dark:text-gray-100">
-        {elapsed}
-      </h3>
+    // Clock Out
+    const handleClockOut = () => {
+        const now = new Date();
+        const diff = now - new Date(attendance.clockIn).getTime();
 
-      {/* Clock In/Out Times */}
-      <div className="mt-3 flex justify-between text-xs text-gray-600 dark:text-gray-300">
-        <span>Clock In: {formatTime(attendance.clockIn)}</span>
-        <span>Clock Out: {formatTime(attendance.clockOut)}</span>
-      </div>
+        setAttendance({
+            isPresent: false,
+            clockIn: attendance.clockIn,
+            clockOut: now.toISOString(),
+            totalHours: formatDiff(diff),
+        });
+    };
 
-      {/* Action Button */}
-      <div className="mt-4 flex justify-end">
-        {!attendance.isPresent ? (
-          <button
-            onClick={handleClockIn}
-            className="flex items-center gap-1 text-xs px-3 py-1.5 bg-green-100 text-green-700 rounded-lg hover:bg-green-200 transition"
-          >
-            <CheckCircle className="w-3 h-3" /> Clock In
-          </button>
-        ) : (
-          <button
-            onClick={handleClockOut}
-            className="flex items-center gap-1 text-xs px-3 py-1.5 bg-red-100 text-red-700 rounded-lg hover:bg-red-200 transition"
-          >
-            <LogOut className="w-3 h-3" /> Clock Out
-          </button>
-        )}
-      </div>
-    </div>
-  );
+    return (
+        <div className="bg-white dark:bg-gray-800 p-5 rounded-2xl shadow-md border hover:shadow-lg transition">
+            {/* Title */}
+            <h2 className="text-xs font-semibold mb-2 uppercase text-gray-700 dark:text-gray-200 flex justify-between items-center">
+                <span className="flex items-center gap-2">
+                    <Clock className="w-4 h-4 text-blue-600" />
+                    Attendance
+                </span>
+                <Button
+                    onClick={() => { }} // Add your click handler function
+                    className="text-blue-600 hover:underline text-xs bg-transparent border-none p-0 cursor-pointer"
+                >
+                    View
+                </Button>
+            </h2>
+
+            {/* Hours */}
+            <p className="text-sm text-gray-500">Total Hours</p>
+            <h3 className="text-md font-semibold text-gray-800 dark:text-gray-100">
+                {elapsed}
+            </h3>
+
+            {/* Clock In/Out Times */}
+            <div className="mt-3 flex justify-between text-xs text-gray-600 dark:text-gray-300">
+                <span>Clock In: {formatTime(attendance.clockIn)}</span>
+                <span>Clock Out: {formatTime(attendance.clockOut)}</span>
+            </div>
+
+            {/* Action Button */}
+            <div className="mt-4 flex justify-end">
+                {!attendance.isPresent ? (
+                    <button
+                        onClick={handleClockIn}
+                        className="flex items-center gap-1 text-xs px-3 py-1.5 bg-green-100 text-green-700 rounded-lg hover:bg-green-200 transition"
+                    >
+                        <CheckCircle className="w-3 h-3" /> Clock In
+                    </button>
+                ) : (
+                    <button
+                        onClick={handleClockOut}
+                        className="flex items-center gap-1 text-xs px-3 py-1.5 bg-red-100 text-red-700 rounded-lg hover:bg-red-200 transition"
+                    >
+                        <LogOut className="w-3 h-3" /> Clock Out
+                    </button>
+                )}
+            </div>
+        </div>
+    );
 }
 
 const Home = () => {

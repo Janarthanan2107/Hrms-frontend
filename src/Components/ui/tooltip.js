@@ -69,6 +69,8 @@ const TooltipContent = React.forwardRef(
             pos.top = rect.top + rect.height / 2
             pos.left = rect.right + sideOffset
             break
+          default:
+          throw new Error(`Unexpected side value: ${side}`)
         }
 
         setStyle({

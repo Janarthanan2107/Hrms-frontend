@@ -18,7 +18,7 @@ const Sheet = ({ children, open, onOpenChange, ...props }) => {
 
 const SheetTrigger = ({ children, ...props }) => {
   const { onOpenChange } = React.useContext(SheetContext)
-  
+
   return React.cloneElement(children, {
     onClick: () => onOpenChange(true),
     ...props
@@ -27,7 +27,7 @@ const SheetTrigger = ({ children, ...props }) => {
 
 const SheetClose = ({ children, ...props }) => {
   const { onOpenChange } = React.useContext(SheetContext)
-  
+
   return React.cloneElement(children, {
     onClick: () => onOpenChange(false),
     ...props
@@ -36,7 +36,7 @@ const SheetClose = ({ children, ...props }) => {
 
 const SheetOverlay = React.forwardRef(({ className, ...props }, ref) => {
   const { open, onOpenChange } = React.useContext(SheetContext)
-  
+
   return (
     <div
       className={cn(
@@ -63,11 +63,11 @@ const sheetVariants = {
 
 const SheetContent = React.forwardRef(({ side = "right", className, children, title = "sheet", ...props }, ref) => {
   const { open, onOpenChange } = React.useContext(SheetContext)
-  
+
   // Animation classes based on side
   const getAnimationClasses = () => {
     if (!open) {
-      switch(side) {
+      switch (side) {
         case "top": return "transform -translate-y-full"
         case "bottom": return "transform translate-y-full"
         case "left": return "transform -translate-x-full"
@@ -77,7 +77,7 @@ const SheetContent = React.forwardRef(({ side = "right", className, children, ti
     }
     return ""
   }
-  
+
   return (
     <>
       <SheetOverlay />
@@ -125,12 +125,18 @@ const SheetFooter = ({ className, ...props }) => (
 )
 SheetFooter.displayName = "SheetFooter"
 
-const SheetTitle = React.forwardRef(({ className, ...props }, ref) => (
+const SheetTitle = React.forwardRef(({
+  className,
+  children = "Default Title", // Add default fallback
+  ...props
+}, ref) => (
   <h3
     ref={ref}
     className={cn("text-lg font-semibold text-foreground", className)}
     {...props}
-  />
+  >
+    {children}
+  </h3>
 ))
 SheetTitle.displayName = "SheetTitle"
 

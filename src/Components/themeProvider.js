@@ -17,7 +17,7 @@ export function ThemeProvider({ children, defaultTheme = "system" }) {
     } else if (defaultTheme === "system") {
       setTheme(systemDark ? "dark" : "light")
     }
-  }, [])
+  }, [defaultTheme])
 
   useEffect(() => {
     if (!mounted) return
