@@ -8,7 +8,7 @@ import Dashboard from "./pages/dashboard/dashboard"; // ✅ Capitalized
 import Home from "./pages/dashboard/home";
 
 // Mock role (later from login/session)
-const userRole = "admin"; // "admin" | "superadmin" | "employee"
+const userRole = "employee"; // "admin" | "superadmin" | "employee"
 
 function NotFound() {
   return (
