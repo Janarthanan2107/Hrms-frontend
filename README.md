@@ -1,1 +1,1 @@
-Packages has been successfully initalizer!
+layout and dasshboard setup has been completed
