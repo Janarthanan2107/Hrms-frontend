@@ -1,1 +1,1 @@
-Netlify errors has been fixed
+Reports, settings, help desk ui completed
