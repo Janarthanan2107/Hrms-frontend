@@ -88,7 +88,7 @@ function AttendanceCard() {
                 </span>
                 <Button
                     onClick={() => { }} // Add your click handler function
-                    className="text-blue-600 hover:underline text-xs bg-transparent border-none p-0 cursor-pointer"
+                    className="text-blue-600 hover:underline hover:bg-transparent text-xs bg-transparent border-none p-0 cursor-pointer"
                 >
                     View
                 </Button>
@@ -260,7 +260,7 @@ Please share info via mail ASAP.`,
                         {announcements.length > 0 ? (
                             <div className="space-y-4">
                                 {announcements.map((a) => (
-                                    <div key={a.id} className="border p-4 rounded-lg hover:shadow-md transition">
+                                    <div key={a.id} className="border dark:border-gray-400 p-4 rounded-lg hover:shadow-md transition">
                                         <p className="text-xs text-gray-500 mb-1">
                                             {a.author} • {a.posted}
                                         </p>

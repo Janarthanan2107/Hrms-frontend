@@ -94,7 +94,7 @@ export function NotificationDropdown() {
 }
 
 
-export default function HeaderDropdown() {
+export default function HeaderDropdown({ handleLogout }) {
   const [open, setOpen] = useState(false);
   const menuRef = useRef(null);
 
@@ -137,7 +137,7 @@ export default function HeaderDropdown() {
             </button>
           </div>
           <div className="border-t mt-1 pt-1">
-            <button className="text-sm px-2 py-2 hover:bg-gray-100 dark:hover:bg-gray-500 text-left rounded w-full">
+            <button className="text-sm px-2 py-2 hover:bg-gray-100 dark:hover:bg-gray-500 text-left rounded w-full" onClick={handleLogout}>
               Log out
             </button>
           </div>
@@ -148,7 +148,7 @@ export default function HeaderDropdown() {
 }
 
 
-export function SiteHeader() {
+export function SiteHeader({ handleLogout }) {
   return (
     <header className="sticky top-0 z-10 w-full border-b bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
       <div className="container flex h-14 max-w-screen-2xl items-center justify-between px-4">
@@ -164,14 +164,14 @@ export function SiteHeader() {
           <Input
             type="search"
             placeholder="Search..."
-            className="pl-9 pr-3 h-9 w-full rounded-lg text-sm focus:ring-2 focus:ring-primary"
+            className="pl-9 pr-3 h-9 w-full rounded-lg text-sm focus:ring-2 focus:ring-primary border border-gray-300 dark:border-gray-400"
           />
         </div>
 
         {/* Right Section */}
         <div className="flex items-center gap-2">
           <NotificationDropdown />
-          <HeaderDropdown />
+          <HeaderDropdown handleLogout={handleLogout} />
         </div>
       </div>
     </header>

@@ -43,25 +43,28 @@ import {
 
 export const useNavigation = (userRole) => {
   const navItems = [
+    // Dashboard changes based on role
     userRole === "employee"
       ? { label: "Home", href: "/home", icon: LayoutDashboard }
       : { label: "Dashboard", href: "/dashboard", icon: LayoutDashboard },
 
-    {
+    // Admin Panel (only for admin roles)
+    (userRole === "admin" || userRole === "superadmin") && {
       label: "Admin",
       href: "/admin",
       icon: UserCog,
       subItems: [
         { label: "Organization", href: "/admin/companyprofile", icon: Building2 },
-        { label: "User group", href: "/admin/usergroup", icon: Users },
-        { label: "User permission", href: "/admin/userpermission", icon: ShieldCheck },
+        { label: "User Group", href: "/admin/usergroup", icon: Users },
+        { label: "User Permission", href: "/admin/userpermission", icon: ShieldCheck },
         { label: "Notice Board", href: "/admin/noticeboard", icon: Megaphone },
         { label: "Password Policy", href: "/admin/passwordpolicy", icon: Lock },
         { label: "Organization Documents", href: "/admin/organizationdocuments", icon: FileArchive },
       ],
     },
 
-    {
+    // Master (Admin/Superadmin only)
+    (userRole === "admin" || userRole === "superadmin") && {
       label: "Master",
       href: "/master",
       icon: Layers3,
@@ -80,7 +83,8 @@ export const useNavigation = (userRole) => {
       ],
     },
 
-    {
+    // Configuration (Admin/Superadmin only)
+    (userRole === "admin" || userRole === "superadmin") && {
       label: "Configuration",
       href: "/configuration",
       icon: Settings,
@@ -96,6 +100,7 @@ export const useNavigation = (userRole) => {
       ],
     },
 
+    // Employee Section
     {
       label: "Employee",
       href: "/employee",
@@ -105,16 +110,17 @@ export const useNavigation = (userRole) => {
         { label: "Leave Request", href: "/employee/leaverequest", icon: PlaneTakeoff },
         { label: "Reimbursement Request", href: "/employee/reimbursementrequest", icon: Receipt },
         { label: "Advance Salary Request", href: "/employee/advancerequest", icon: HandCoins },
-        { label: "Subordinates", href: "/employee/subordinate", icon: UserCheck },
+        userRole === "superadmin" && { label: "Subordinates", href: "/employee/subordinate", icon: UserCheck },
         { label: "Resignation", href: "/employee/resignationrequest", icon: UserX },
         { label: "Approval Inbox", href: "/employee/approvalinbox", icon: Inbox },
         { label: "TDS Declaration Form", href: "/employee/tdsdeclaration", icon: FileText },
-        { label: "Employee Onboarding", href: "/employee/employeeonboarding", icon: UserPlus },
-        { label: "Intern Onboarding", href: "/employee/internonboarding", icon: GraduationCap },
-      ],
+        userRole !== "employee" && { label: "Employee Onboarding", href: "/employee/employeeonboarding", icon: UserPlus },
+        userRole === "admin" && { label: "Intern Onboarding", href: "/employee/internonboarding", icon: GraduationCap },
+      ].filter(Boolean), // clean nulls if condition fails
     },
 
-    {
+    // Payroll (Admin/Superadmin only)
+    (userRole === "admin" || userRole === "superadmin") && {
       label: "Payroll",
       href: "/payroll",
       icon: DollarSign,
@@ -126,17 +132,25 @@ export const useNavigation = (userRole) => {
       ],
     },
 
+    // Attendance (All users, but different)
     {
       label: "Attendance",
       href: "/attendance",
       icon: Clock,
-      subItems: [
-        { label: "Day Attendance", href: "/attendance/dayattendance", icon: CalendarDays },
-        { label: "Attendance Log", href: "/attendance/attendancelog", icon: ClipboardList },
-      ],
+      subItems:
+        userRole === "employee"
+          ? [
+              { label: "My Attendance", href: "/attendance/myattendance", icon: CalendarDays },
+              { label: "My Attendance Log", href: "/attendance/mylog", icon: ClipboardList },
+            ]
+          : [
+              { label: "Day Attendance", href: "/attendance/dayattendance", icon: CalendarDays },
+              { label: "Attendance Log", href: "/attendance/attendancelog", icon: ClipboardList },
+            ],
     },
 
-    {
+    // Asset Management (Admin/Superadmin only)
+    (userRole === "admin" || userRole === "superadmin") && {
       label: "Asset Management",
       href: "/assetmanagement",
       icon: Monitor,
@@ -146,18 +160,28 @@ export const useNavigation = (userRole) => {
       ],
     },
 
-    { label: "Roaster", href: "/roster", icon: CalendarClock },
-    { label: "Reports", href: "/reports", icon: BarChart3, isSecondary: true },
+    // Roster (everyone)
+    { label: "Roster", href: "/roster", icon: CalendarClock },
 
+    // Reports (all, but richer for admin)
     {
+      label: "Reports",
+      href: "/reports",
+      icon: BarChart3,
+      isSecondary: true,
+    },
+
+    // Settings (admin only)
+    (userRole === "admin" || userRole === "superadmin") && {
       label: "Settings",
       href: "/settings",
       icon: Settings,
       isSecondary: true,
     },
 
+    // Help (everyone)
     { label: "Help", href: "/help", icon: LifeBuoy, isSecondary: true },
-  ];
+  ].filter(Boolean); // remove false entries
 
   return { navItems };
 };

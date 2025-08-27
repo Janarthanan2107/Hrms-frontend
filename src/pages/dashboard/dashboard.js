@@ -3,7 +3,7 @@ import {
     Users, Calendar, DollarSign, Clock, FileText,
     Megaphone, Briefcase, Building2, AlertCircle, Gift
 } from "lucide-react";
-import { BarChart, Bar, XAxis, YAxis, Tooltip, ResponsiveContainer, PieChart, Pie, Cell } from "recharts";
+import { BarChart, Bar, XAxis, YAxis, Tooltip, ResponsiveContainer, PieChart, Pie, Cell, Legend } from "recharts";
 
 const Dashboard = () => {
     const stats = [
@@ -72,14 +72,23 @@ const Dashboard = () => {
                 "Coming together is a beginning, staying together is progress, and working together is success."
             </p>
 
-            {/* Stats */}
             <div className="grid grid-cols-2 lg:grid-cols-4 gap-5 mb-6">
                 {stats.map((item, idx) => (
-                    <div className="bg-white dark:bg-gray-800 p-4 rounded-xl border dark:border-gray-700 shadow-sm flex items-center gap-3 hover:shadow-md transition">
-                        {item.icon}
-                        <div>
-                            <p className="text-xs text-gray-500 dark:text-gray-400">{item.title}</p>
-                            <h2 className="text-lg font-semibold text-gray-800 dark:text-gray-100">{item.value}</h2>
+                    <div
+                        key={idx}
+                        className="relative bg-gradient-to-br from-blue-50 to-white dark:from-gray-800 dark:to-gray-900 
+                 p-5 rounded-xl border dark:border-gray-700 shadow-sm hover:shadow-md transition"
+                    >
+                        <div className="flex items-center justify-between mb-2">
+                            <span className="text-sm text-gray-500 dark:text-gray-400">{item.title}</span>
+                            {item.icon}
+                        </div>
+                        <h2 className="text-2xl font-bold text-gray-800 dark:text-gray-100">{item.value}</h2>
+                        <p className="text-xs text-emerald-600">↑ 12% from last month</p>
+
+                        {/* Sparkline placeholder */}
+                        <div className="absolute bottom-2 right-2 opacity-30">
+                            📈
                         </div>
                     </div>
                 ))}
@@ -107,15 +116,18 @@ const Dashboard = () => {
                                 data={deptData}
                                 dataKey="value"
                                 nameKey="name"
+                                innerRadius={40}
                                 outerRadius={80}
-                                label
-                                fontSize={12}
+                                paddingAngle={3}
+                                labelLine={true}
+                                // label={({ name, percent }) => `${name} ${(percent * 100).toFixed(0)}%`}
                             >
-                                {deptData.map((_, i) => (
-                                    <Cell key={i} fill={COLORS[i % COLORS.length]} />
+                                {deptData.map((entry, index) => (
+                                    <Cell key={`cell-${index}`} fill={COLORS[index % COLORS.length]} />
                                 ))}
                             </Pie>
                             <Tooltip />
+                            <Legend verticalAlign="bottom" height={38} />
                         </PieChart>
                     </ResponsiveContainer>
                 </div>
