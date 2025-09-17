@@ -17,10 +17,12 @@ import {
     Grid,
     Table,
     Search,
+    ChevronRight,
 } from "lucide-react";
-import { Input } from "../../Components/ui/input";
-import { Button } from "../../Components/ui/button";
-import { useSidebar } from "../../Components/ui/sidebar";
+import { Input } from "../../components/ui/input"; 
+import { Button } from "../../components/ui/button"; 
+import { useSidebar } from "../../components/ui/sidebar"; 
+import { cn } from "../../utils/tailwindUtils";
 
 const reports = [
     { title: "Day-wise Attendance", icon: CalendarClock, description: "View daily attendance of employees.", route: "/reports/daywise-attendance" },
@@ -42,83 +44,130 @@ const ReportIndex = () => {
     const navigate = useNavigate();
     const [view, setView] = useState("card"); // card | list | table
     const [search, setSearch] = useState("");
-    const { isMobile } = useSidebar()
+    const { isMobile } = useSidebar();
 
     const filteredReports = reports.filter(report =>
-        report.title.toLowerCase().includes(search.toLowerCase())
+        report.title.toLowerCase().includes(search.toLowerCase()) ||
+        report.description.toLowerCase().includes(search.toLowerCase())
     );
 
     return (
-        <div className="px-2">
-            <div className="flex flex-col sm:flex-row sm:justify-between sm:items-center mb-4 gap-3">
-                <h1 className="text-lg font-semibold text-gray-800 dark:text-gray-100">
-                    Reports
-                </h1>
-
-                {/* Search Bar */}
-                <div className="relative flex-1 max-w-full sm:max-w-md">
-                    <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
-                    <Input
-                        type="search"
-                        placeholder="Search reports..."
-                        value={search}
-                        onChange={(e) => setSearch(e.target.value)}
-                        className="pl-9 pr-3 h-9 w-full rounded-lg text-sm focus:ring-2 focus:ring-primary bg-white"
-                    />
+        <div className="p-4 md:p-6">
+            {/* Header Section */}
+            <div className="flex flex-col sm:flex-row sm:justify-between sm:items-center mb-6 gap-4">
+                <div>
+                    <h1 className="text-2xl font-bold text-foreground">
+                        Reports
+                    </h1>
+                    <p className="text-sm text-muted-foreground mt-1">
+                        Access all your HR and payroll reports in one place
+                    </p>
                 </div>
 
-                {/* View Toggle */}
-                {!isMobile && (
-                    <div className="flex items-center gap-2">
-                        <Button
-                            className={`p-2 rounded-md ${view === "card"
-                                ? "bg-blue-600 text-white"
-                                : "bg-gray-200 dark:bg-gray-700 text-gray-600 dark:text-gray-300"
-                                }`}
-                            onClick={() => setView("card")}
-                        >
-                            <Grid className="w-5 h-5" />
-                        </Button>
-                        <Button
-                            className={`p-2 rounded-md ${view === "list"
-                                ? "bg-blue-600 text-white"
-                                : "bg-gray-200 dark:bg-gray-700 text-gray-600 dark:text-gray-300"
-                                }`}
-                            onClick={() => setView("list")}
-                        >
-                            <List className="w-5 h-5" />
-                        </Button>
-                        <Button
-                            className={`p-2 rounded-md ${view === "table"
-                                ? "bg-blue-600 text-white"
-                                : "bg-gray-200 dark:bg-gray-700 text-gray-600 dark:text-gray-300"
-                                }`}
-                            onClick={() => setView("table")}
-                        >
-                            <Table className="w-5 h-5" />
-                        </Button>
+                <div className="flex flex-col sm:flex-row gap-3">
+                    {/* Search Bar */}
+                    <div className="relative flex-1 max-w-full sm:max-w-xs">
+                        <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
+                        <Input
+                            type="search"
+                            placeholder="Search reports..."
+                            value={search}
+                            onChange={(e) => setSearch(e.target.value)}
+                            className={cn(
+                                "pl-9 pr-3 h-10 w-full rounded-lg",
+                                "bg-background border-border",
+                                "placeholder:text-muted-foreground",
+                                "focus-visible:ring-2 focus-visible:ring-ring"
+                            )}
+                        />
                     </div>
-                )}
+
+                    {/* View Toggle */}
+                    {!isMobile && (
+                        <div className="flex items-center gap-1 p-1 bg-muted rounded-lg">
+                            <Button
+                                variant="ghost"
+                                size="sm"
+                                className={cn(
+                                    "p-2 rounded-md",
+                                    view === "card" 
+                                        ? "bg-background text-foreground shadow-sm" 
+                                        : "text-muted-foreground hover:text-foreground"
+                                )}
+                                onClick={() => setView("card")}
+                            >
+                                <Grid className="w-4 h-4" />
+                            </Button>
+                            <Button
+                                variant="ghost"
+                                size="sm"
+                                className={cn(
+                                    "p-2 rounded-md",
+                                    view === "list" 
+                                        ? "bg-background text-foreground shadow-sm" 
+                                        : "text-muted-foreground hover:text-foreground"
+                                )}
+                                onClick={() => setView("list")}
+                            >
+                                <List className="w-4 h-4" />
+                            </Button>
+                            <Button
+                                variant="ghost"
+                                size="sm"
+                                className={cn(
+                                    "p-2 rounded-md",
+                                    view === "table" 
+                                        ? "bg-background text-foreground shadow-sm" 
+                                        : "text-muted-foreground hover:text-foreground"
+                                )}
+                                onClick={() => setView("table")}
+                            >
+                                <Table className="w-4 h-4" />
+                            </Button>
+                        </div>
+                    )}
+                </div>
+            </div>
+
+            {/* Reports Count */}
+            <div className="mb-4">
+                <p className="text-sm text-muted-foreground">
+                    {filteredReports.length} {filteredReports.length === 1 ? 'report' : 'reports'} found
+                </p>
             </div>
 
             {/* Reports Display */}
             {view === "card" && (
-                <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-5">
+                <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
                     {filteredReports.map((report, idx) => {
                         const Icon = report.icon;
                         return (
                             <div
                                 key={idx}
                                 onClick={() => navigate(report.route)}
-                                className="flex flex-col gap-2 p-4 bg-white dark:bg-gray-800 rounded-xl shadow-md hover:shadow-lg transition cursor-pointer"
+                                className={cn(
+                                    "group flex flex-col gap-3 p-5 rounded-xl border",
+                                    "bg-card text-card-foreground",
+                                    "hover:shadow-md hover:border-border/80",
+                                    "cursor-pointer transition-all duration-200",
+                                    "hover:scale-[1.02] transform-gpu"
+                                )}
                             >
                                 <div className="flex items-center gap-3">
-                                    <div className="p-3 bg-blue-100 dark:bg-blue-900 text-blue-600 dark:text-blue-400 rounded-lg">
-                                        <Icon className="w-6 h-6" />
+                                    <div className={cn(
+                                        "p-2.5 rounded-lg",
+                                        "bg-primary/10 text-primary",
+                                        "group-hover:bg-primary/20 transition-colors"
+                                    )}>
+                                        <Icon className="w-5 h-5" />
                                     </div>
-                                    <p className="text-gray-800 text-sm dark:text-gray-100 font-medium">{report.title}</p>
+                                    <h3 className="text-base font-semibold group-hover:text-primary transition-colors">
+                                        {report.title}
+                                    </h3>
                                 </div>
-                                <p className="text-xs text-gray-500 dark:text-gray-400">{report.description}</p>
+                                <p className="text-sm text-muted-foreground leading-relaxed">
+                                    {report.description}
+                                </p>
                             </div>
                         );
                     })}
@@ -126,56 +175,111 @@ const ReportIndex = () => {
             )}
 
             {view === "list" && (
-                <ul className="space-y-2">
+                <div className="space-y-2">
                     {filteredReports.map((report, idx) => {
                         const Icon = report.icon;
                         return (
-                            <li
+                            <div
                                 key={idx}
                                 onClick={() => navigate(report.route)}
-                                className="flex items-center gap-3 p-3 bg-white dark:bg-gray-800 rounded-lg shadow-sm hover:shadow-md cursor-pointer"
+                                className={cn(
+                                    "group flex items-center gap-4 p-4 rounded-lg border",
+                                    "bg-card text-card-foreground",
+                                    "hover:shadow-sm hover:border-border/80",
+                                    "cursor-pointer transition-all duration-200"
+                                )}
                             >
-                                <Icon className="w-5 h-5 text-blue-600 dark:text-blue-400" />
-                                <div>
-                                    <p className="text-gray-800 dark:text-gray-100 font-medium">{report.title}</p>
-                                    <p className="text-xs text-gray-500 dark:text-gray-400">{report.description}</p>
+                                <div className={cn(
+                                    "p-2 rounded-md",
+                                    "bg-primary/10 text-primary",
+                                    "group-hover:bg-primary/20 transition-colors"
+                                )}>
+                                    <Icon className="w-4 h-4" />
                                 </div>
-                            </li>
+                                <div className="flex-1 min-w-0">
+                                    <h3 className="text-base font-semibold group-hover:text-primary transition-colors truncate">
+                                        {report.title}
+                                    </h3>
+                                    <p className="text-sm text-muted-foreground truncate">
+                                        {report.description}
+                                    </p>
+                                </div>
+                                <div className={cn(
+                                    "opacity-0 group-hover:opacity-100",
+                                    "text-muted-foreground transition-opacity"
+                                )}>
+                                    <ChevronRight className="w-4 h-4" />
+                                </div>
+                            </div>
                         );
                     })}
-                </ul>
+                </div>
             )}
 
             {view === "table" && (
-                <div className="overflow-x-auto">
-                    <table className="min-w-full bg-white dark:bg-gray-800 rounded-lg overflow-hidden">
-                        <thead>
-                            <tr className="bg-gray-100 dark:bg-gray-700 text-left text-gray-600 dark:text-gray-300 text-sm">
-                                <th className="px-4 py-2">#</th>
-                                <th className="px-4 py-2">Report</th>
-                                <th className="px-4 py-2">Description</th>
+                <div className="overflow-x-auto rounded-lg border">
+                    <table className="w-full bg-card text-card-foreground">
+                        <thead className="bg-muted/50">
+                            <tr className="text-left text-sm text-muted-foreground">
+                                <th className="px-6 py-3 font-medium">#</th>
+                                <th className="px-6 py-3 font-medium">Report</th>
+                                <th className="px-6 py-3 font-medium">Description</th>
+                                <th className="px-6 py-3 font-medium">Category</th>
                             </tr>
                         </thead>
-                        <tbody>
+                        <tbody className="divide-y divide-border">
                             {filteredReports.map((report, idx) => {
                                 const Icon = report.icon;
                                 return (
                                     <tr
                                         key={idx}
                                         onClick={() => navigate(report.route)}
-                                        className="border-b cursor-pointer hover:bg-gray-50 dark:hover:bg-gray-700 transition"
+                                        className={cn(
+                                            "group cursor-pointer transition-colors",
+                                            "hover:bg-muted/50"
+                                        )}
                                     >
-                                        <td className="px-4 py-2">{idx + 1}</td>
-                                        <td className="px-4 py-2 flex items-center gap-2">
-                                            <Icon className="w-5 h-5 text-blue-600 dark:text-blue-400" />
-                                            {report.title}
+                                        <td className="px-6 py-4 text-sm text-muted-foreground">
+                                            {idx + 1}
                                         </td>
-                                        <td className="px-4 py-2">{report.description}</td>
+                                        <td className="px-6 py-4">
+                                            <div className="flex items-center gap-3">
+                                                <div className="p-1.5 rounded-md bg-primary/10 text-primary">
+                                                    <Icon className="w-4 h-4" />
+                                                </div>
+                                                <span className="text-sm font-medium group-hover:text-primary transition-colors">
+                                                    {report.title}
+                                                </span>
+                                            </div>
+                                        </td>
+                                        <td className="px-6 py-4 text-sm text-muted-foreground">
+                                            {report.description}
+                                        </td>
+                                        <td className="px-6 py-4">
+                                            <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-primary/10 text-primary">
+                                                HR
+                                            </span>
+                                        </td>
                                     </tr>
                                 );
                             })}
                         </tbody>
                     </table>
+                </div>
+            )}
+
+            {/* Empty State */}
+            {filteredReports.length === 0 && (
+                <div className="flex flex-col items-center justify-center py-16 text-center">
+                    <div className="p-4 rounded-full bg-muted mb-4">
+                        <Search className="w-8 h-8 text-muted-foreground" />
+                    </div>
+                    <h3 className="text-lg font-semibold text-foreground mb-2">
+                        No reports found
+                    </h3>
+                    <p className="text-muted-foreground max-w-md">
+                        No reports match your search criteria. Try different keywords or browse all reports.
+                    </p>
                 </div>
             )}
         </div>
